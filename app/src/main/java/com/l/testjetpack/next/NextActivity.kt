@@ -8,12 +8,17 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider.Factory
 import androidx.lifecycle.ViewModelProviders
+import com.l.testjetpack.BaseApplication
 import com.l.testjetpack.LoggerUtils
 import com.l.testjetpack.MainActivity
 import com.l.testjetpack.R
+import com.l.testjetpack.dagger.DaggerMainComponent
+import com.l.testjetpack.dagger.Db
+import com.l.testjetpack.dagger.Presenter
 import com.l.testjetpack.databinding.ActivityNextBinding
 import kotlinx.android.synthetic.main.activity_next.*
 import java.lang.reflect.Constructor
+import javax.inject.Inject
 import kotlin.random.Random
 
 class NextActivity : AppCompatActivity() {
@@ -21,8 +26,19 @@ class NextActivity : AppCompatActivity() {
     private lateinit var model: NameViewModel
     var i: Int = 0
 
+    @Inject
+    lateinit var present: Presenter
+
+    @Inject
+    lateinit var db: Db
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        var component = DaggerMainComponent.builder()
+            .appScopeComponent((application as BaseApplication).baseComponent).build()
+        LoggerUtils.LOGV("component = " + component.toString())
+        component.inject(this)
         var binding =
             DataBindingUtil.setContentView<ActivityNextBinding>(this, R.layout.activity_next)
 

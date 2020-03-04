@@ -9,20 +9,31 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
+import com.l.testjetpack.dagger.*
 import com.l.testjetpack.databinding.ActivityMainBinding
 import com.l.testjetpack.next.NameViewModel
 import com.l.testjetpack.next.NextActivity
 import kotlinx.android.synthetic.main.activity_main.*
+import javax.inject.Inject
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var model: NameViewModel
 //    private lateinit var appModel: AppViewModule
 
+    @Inject
+    lateinit var present: Presenter
+
+    @Inject
+    lateinit var db: Db
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        var component = DaggerMainComponent.builder()
+            .appScopeComponent((application as BaseApplication).baseComponent).build()
+        LoggerUtils.LOGV("component = "+component.toString())
+        component.inject(this)
         // Get the ViewModel.
         model = ViewModelProviders.of(this
             , object : ViewModelProvider.Factory {
