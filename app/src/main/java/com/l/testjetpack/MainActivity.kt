@@ -30,10 +30,9 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        var component = DaggerMainComponent.builder()
-            .appScopeComponent((application as BaseApplication).baseComponent).build()
-        LoggerUtils.LOGV("component = "+component.toString())
-        component.inject(this)
+        var component = (application as BaseApplication).baseComponent.getMainComponent().inject(this)
+//        LoggerUtils.LOGV("component = "+component.toString())
+//        component.inject(this)
         // Get the ViewModel.
         model = ViewModelProviders.of(this
             , object : ViewModelProvider.Factory {
